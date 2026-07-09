@@ -24,7 +24,7 @@ namespace StudentAge.QQAIMoments
     {
         public const string PluginGuid = "studentage.qqai.moments";
         public const string PluginName = "StudentAge QQ AI Moments";
-        public const string PluginVersion = "1.1.13";
+        public const string PluginVersion = "1.1.14";
         private const int RequiredUsageConsentVersion = 1;
         private const int UsageConsentWindowId = 1599010101;
         private const int RawTextConsentWindowId = 1599010102;
@@ -100,13 +100,13 @@ namespace StudentAge.QQAIMoments
             }
         }
 
-        internal static void RewriteGameSaveDirectorySafe(ref string directory, string reason)
+        internal static void RewriteGameSaveDirectorySafe(ref string directory, string filename, string reason)
         {
             try
             {
                 if (instance != null)
                 {
-                    instance.RewriteGameSaveDirectory(ref directory, reason);
+                    instance.RewriteGameSaveDirectory(ref directory, filename, reason);
                 }
             }
             catch (Exception ex)
@@ -307,11 +307,11 @@ namespace StudentAge.QQAIMoments
             }
         }
 
-        internal void RewriteGameSaveDirectory(ref string directory, string reason)
+        internal void RewriteGameSaveDirectory(ref string directory, string filename, string reason)
         {
             try
             {
-                if (string.IsNullOrEmpty(directory) || !IsUserSavePath(directory))
+                if (!IsOfficialGameSaveFileName(filename) || string.IsNullOrEmpty(directory) || !IsUserSavePath(directory))
                 {
                     return;
                 }
@@ -409,6 +409,26 @@ namespace StudentAge.QQAIMoments
             string fullPath = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             string stale = Path.GetFullPath(Path.Combine(Application.persistentDataPath, "Saves", "user")).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             return string.Equals(fullPath, stale, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsOfficialGameSaveFileName(string filename)
+        {
+            if (string.IsNullOrEmpty(filename))
+            {
+                return false;
+            }
+
+            string clean = Path.GetFileName(filename);
+            if (!string.Equals(clean, filename, StringComparison.Ordinal)
+                || clean.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+                return false;
+            }
+
+            return string.Equals(clean, "_global", StringComparison.OrdinalIgnoreCase)
+                || clean.EndsWith(".save", StringComparison.OrdinalIgnoreCase)
+                || clean.EndsWith(".autosave", StringComparison.OrdinalIgnoreCase)
+                || clean.EndsWith(".quicksave", StringComparison.OrdinalIgnoreCase);
         }
 
         private static string FindLikelySaveUserId()
