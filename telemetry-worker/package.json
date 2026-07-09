@@ -1,0 +1,17 @@
+{
+  "name": "studentage-qqai-telemetry-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "deploy": "wrangler deploy",
+    "schema:remote": "wrangler d1 execute qqai-telemetry --remote --file=./schema.sql",
+    "schema:local": "wrangler d1 execute qqai-telemetry --local --file=./schema.sql"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "latest",
+    "typescript": "^5.5.4",
+    "wrangler": "latest"
+  }
+}

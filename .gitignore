@@ -1,0 +1,30 @@
+bin/
+obj/
+analysis/
+config/
+BepInEx/
+
+*.log
+*.user
+*.suo
+.vs/
+
+# Local API keys and runtime telemetry secrets.
+*.env
+.env*
+*.local
+*.secret
+
+# Cloudflare Worker local state/dependencies.
+telemetry-worker/.dev.vars
+telemetry-worker/node_modules/
+telemetry-worker/.wrangler/
+telemetry-worker/.mf/
+telemetry-worker/dist/
+
+# Generated package/output folders.
+artifacts/
+dist/
+publish/
+release/qqai_diagnose_fix_*.log
+
